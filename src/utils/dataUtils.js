@@ -170,6 +170,47 @@ export function processData(rows) {
   };
 }
 
+export function buildNetworkData(processed, centerPerson, maxNodes = 25) {
+  const edgeMap = {};
+  processed.forEach(r => {
+    const a = r.senderNorm;
+    const b = r.receiverNorm;
+    if (!a || !b || a === b) return;
+    const key = a < b ? `${a}|||${b}` : `${b}|||${a}`;
+    edgeMap[key] = (edgeMap[key] || 0) + 1;
+  });
+
+  const directConnections = {};
+  Object.entries(edgeMap).forEach(([key, count]) => {
+    const [a, b] = key.split('|||');
+    if (a === centerPerson) directConnections[b] = (directConnections[b] || 0) + count;
+    else if (b === centerPerson) directConnections[a] = (directConnections[a] || 0) + count;
+  });
+
+  const topConnections = Object.entries(directConnections)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, maxNodes - 1)
+    .map(([name]) => name);
+
+  const nodeSet = new Set([centerPerson, ...topConnections]);
+
+  const nodes = Array.from(nodeSet).map(name => ({
+    id: name,
+    isCenter: name === centerPerson,
+    value: directConnections[name] || 0,
+  }));
+
+  const links = [];
+  Object.entries(edgeMap).forEach(([key, count]) => {
+    const [a, b] = key.split('|||');
+    if (nodeSet.has(a) && nodeSet.has(b)) {
+      links.push({ source: a, target: b, value: count });
+    }
+  });
+
+  return { nodes, links };
+}
+
 export function getPersonData(processed, personName) {
   const sent = processed.filter(r => r.senderNorm === personName);
   const received = processed.filter(r => r.receiverNorm === personName);

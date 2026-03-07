@@ -1,4 +1,4 @@
-const tabs = ['Overview', 'People Explorer', 'Correspondence Progression', 'Individual Lookup'];
+const tabs = ['Overview', 'People Explorer', 'Correspondence Progression', 'Individual Lookup', 'Network Graphs'];
 
 export default function NavBar({ activeTab, setActiveTab }) {
   return (
