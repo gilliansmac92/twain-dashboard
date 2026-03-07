@@ -5,23 +5,23 @@ import {
 
 function StatCard({ label, value }) {
   return (
-    <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-5">
-      <div className="text-2xl font-bold text-yellow-400">{value}</div>
-      <div className="text-gray-400 text-sm mt-1">{label}</div>
+    <div className="bg-white border border-[#e5e7eb] rounded-lg p-5 shadow-sm">
+      <div className="text-2xl font-bold text-[#4a2200]">{value}</div>
+      <div className="text-[#888] text-sm mt-1">{label}</div>
     </div>
   );
 }
 
-function HBarChart({ data, dataKey = 'count', nameKey = 'name', color = '#FFD54F' }) {
+function HBarChart({ data, dataKey = 'count', nameKey = 'name', color = '#4a2200' }) {
   return (
     <ResponsiveContainer width="100%" height={data.length * 32 + 40}>
       <BarChart data={data} layout="vertical" margin={{ left: 8, right: 24, top: 4, bottom: 4 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#333" horizontal={false} />
-        <XAxis type="number" tick={{ fill: '#9ca3af', fontSize: 11 }} />
-        <YAxis type="category" dataKey={nameKey} tick={{ fill: '#d1d5db', fontSize: 11 }} width={160} />
+        <CartesianGrid strokeDasharray="3 3" stroke="#eee" horizontal={false} />
+        <XAxis type="number" tick={{ fill: '#555', fontSize: 11 }} />
+        <YAxis type="category" dataKey={nameKey} tick={{ fill: '#333', fontSize: 11 }} width={160} />
         <Tooltip
-          contentStyle={{ background: '#18181b', border: '1px solid #3f3f46', color: '#fff' }}
-          cursor={{ fill: 'rgba(255,213,79,0.08)' }}
+          contentStyle={{ background: 'rgba(40,20,0,.88)', border: 'none', color: '#fff', borderRadius: '6px' }}
+          cursor={{ fill: 'rgba(74,34,0,0.08)' }}
         />
         <Bar dataKey={dataKey} fill={color} radius={[0, 4, 4, 0]} />
       </BarChart>
@@ -42,41 +42,41 @@ export default function Overview({ data }) {
         <StatCard label="Year Range" value={`${minYear}–${maxYear}`} />
       </div>
 
-      <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-5">
-        <h2 className="text-lg font-semibold text-yellow-400 mb-4">Letters Per Year</h2>
+      <div className="bg-white border border-[#e5e7eb] rounded-lg p-5 shadow-sm">
+        <h2 className="text-lg font-semibold text-[#4a2200] mb-4">Letters Per Year</h2>
         <ResponsiveContainer width="100%" height={260}>
           <AreaChart data={lettersPerYear} margin={{ top: 4, right: 16, left: 0, bottom: 4 }}>
             <defs>
               <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#FFD54F" stopOpacity={0.4} />
-                <stop offset="95%" stopColor="#FFD54F" stopOpacity={0} />
+                <stop offset="5%" stopColor="#4a2200" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#4a2200" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-            <XAxis dataKey="year" tick={{ fill: '#9ca3af', fontSize: 11 }} />
-            <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
+            <XAxis dataKey="year" tick={{ fill: '#555', fontSize: 11 }} />
+            <YAxis tick={{ fill: '#555', fontSize: 11 }} />
             <Tooltip
-              contentStyle={{ background: '#18181b', border: '1px solid #3f3f46', color: '#fff' }}
+              contentStyle={{ background: 'rgba(40,20,0,.88)', border: 'none', color: '#fff', borderRadius: '6px' }}
             />
-            <Area type="monotone" dataKey="count" stroke="#FFD54F" strokeWidth={2} fill="url(#goldGrad)" />
+            <Area type="monotone" dataKey="count" stroke="#4a2200" strokeWidth={2} fill="url(#goldGrad)" />
           </AreaChart>
         </ResponsiveContainer>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-5">
-          <h2 className="text-lg font-semibold text-yellow-400 mb-4">Top 20 Senders</h2>
+        <div className="bg-white border border-[#e5e7eb] rounded-lg p-5 shadow-sm">
+          <h2 className="text-lg font-semibold text-[#4a2200] mb-4">Top 20 Senders</h2>
           <HBarChart data={[...topSenders].reverse()} />
         </div>
-        <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-5">
-          <h2 className="text-lg font-semibold text-yellow-400 mb-4">Top 20 Receivers</h2>
-          <HBarChart data={[...topReceivers].reverse()} color="#FFB300" />
+        <div className="bg-white border border-[#e5e7eb] rounded-lg p-5 shadow-sm">
+          <h2 className="text-lg font-semibold text-[#4a2200] mb-4">Top 20 Receivers</h2>
+          <HBarChart data={[...topReceivers].reverse()} color="#7a4010" />
         </div>
       </div>
 
-      <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-5">
-        <h2 className="text-lg font-semibold text-yellow-400 mb-4">Top 20 Locations</h2>
-        <HBarChart data={[...topLocations].reverse()} color="#FFE082" />
+      <div className="bg-white border border-[#e5e7eb] rounded-lg p-5 shadow-sm">
+        <h2 className="text-lg font-semibold text-[#4a2200] mb-4">Top 20 Locations</h2>
+        <HBarChart data={[...topLocations].reverse()} color="#a05820" />
       </div>
     </div>
   );

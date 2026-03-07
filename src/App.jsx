@@ -37,11 +37,11 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="min-h-screen bg-[#f8f5ef] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-yellow-400 text-lg font-medium">Loading letters…</p>
-          <p className="text-gray-500 text-sm mt-1">Parsing ~12,722 records</p>
+          <div className="w-12 h-12 border-4 border-[#4a2200] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[#4a2200] text-lg font-medium">Loading letters…</p>
+          <p className="text-[#888] text-sm mt-1">Parsing ~12,722 records</p>
         </div>
       </div>
     );
@@ -49,17 +49,17 @@ export default function App() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="text-center max-w-md p-8 bg-zinc-900 border border-red-800 rounded-lg">
-          <p className="text-red-400 text-lg font-medium">Error</p>
-          <p className="text-gray-400 text-sm mt-2">{error}</p>
+      <div className="min-h-screen bg-[#f8f5ef] flex items-center justify-center">
+        <div className="text-center max-w-md p-8 bg-white border border-red-300 rounded-lg shadow-sm">
+          <p className="text-red-700 text-lg font-medium">Error</p>
+          <p className="text-[#555] text-sm mt-2">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-[#f8f5ef] text-[#222]">
       <Header />
       <NavBar activeTab={activeTab} setActiveTab={setActiveTab} />
       <main className="max-w-7xl mx-auto px-4 py-8">
