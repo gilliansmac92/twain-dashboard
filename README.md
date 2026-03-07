@@ -1,33 +1,38 @@
-# experiments
-experiments with github copilot agents
+# Mark Twain Letters Dashboard
 
-## Mark Twain Letters — Interactive Dashboard
+An interactive React + Vite + Tailwind CSS dashboard for exploring ~12,722 letters from the [Mark Twain Project Online](https://www.marktwainproject.org/) (1853–1910).
 
-An interactive dashboard that explores [`twainletterscsv.txt`](twainletterscsv.txt) — a corpus of 12,723 letters from the Mark Twain Project Online (1853–1910).
+## Live Dashboard
 
-### Features
+Deployed at: **https://gilliansmac92.github.io/experiments/**
 
-- **Summary stats** — total letters, unique senders/receivers, year range
-- **Letters per Year** — area line chart showing correspondence volume across time
-- **Top 20 Senders / Receivers / Locations** — horizontal bar charts
-- **Browse & Filter** — filter by sender, location, year range, or keyword; results update instantly
-- **Keyword highlighting** — matching text is highlighted in yellow
-- **Sortable table** — click any column header to sort ascending/descending
-- **Pagination** — configurable rows per page
+## Features
 
-### Usage
+- **Overview** – Key stats (total letters, unique senders/receivers, year range), letters-per-year area chart, top 20 senders, receivers, and locations
+- **People Explorer** – Select any of the top 50 senders/receivers to see their personal correspondence stats, timeline, top contacts, and locations
+- **Correspondence Progression** – Stacked bar chart of letters by sender over time, correspondence span table for top correspondents, and a decade-level activity heatmap
+- **Individual Lookup** – Free-text search by sender or receiver name with matching letter table, year timeline, and Wikipedia link
 
-The dashboard is fully self-contained — no internet or server required.
+## Tech Stack
 
-1. **Generate (or regenerate) the dashboard:**
-   ```bash
-   python3 generate_dashboard.py
-   ```
-2. **Open in a browser:**
-   ```
-   open dashboard.html        # macOS
-   xdg-open dashboard.html    # Linux
-   start dashboard.html       # Windows
-   ```
+- [React 18](https://react.dev/) + [Vite 5](https://vitejs.dev/)
+- [Tailwind CSS 3](https://tailwindcss.com/)
+- [Recharts 2](https://recharts.org/)
+- [PapaParse 5](https://www.papaparse.com/) for CSV parsing
 
-> **Note:** `dashboard.html` embeds all 12,723 records and is ~1.2 MB. Re-run `generate_dashboard.py` any time `twainletterscsv.txt` is updated.
+## Data
+
+`twainletterscsv.txt` — CSV with columns: `sender, receiver, date, location, identifier`
+
+## Development
+
+```bash
+npm install
+npm run dev      # dev server at http://localhost:5173/experiments/
+npm run build    # production build → dist/
+npm run preview  # preview production build
+```
+
+## Deployment
+
+Push to `main` — GitHub Actions (`.github/workflows/deploy.yml`) automatically builds and deploys to GitHub Pages via `peaceiris/actions-gh-pages`.
