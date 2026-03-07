@@ -4,7 +4,7 @@ An interactive React + Vite + Tailwind CSS dashboard for exploring ~12,722 lette
 
 ## Live Dashboard
 
-Deployed at: **https://[username].github.io/experiments/**
+Deployed at: **https://gilliansmac92.github.io/experiments/**
 
 ## Features
 

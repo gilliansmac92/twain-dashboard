@@ -57,7 +57,7 @@ export function normalizeLocation(raw) {
 
 export function extractYear(dateStr) {
   if (!dateStr) return null;
-  const match = dateStr.match(/\b(1[89]\d\d)\b/);
+  const match = dateStr.match(/\b([12]\d{3})\b/);
   return match ? parseInt(match[1], 10) : null;
 }
 
