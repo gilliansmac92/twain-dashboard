@@ -151,6 +151,48 @@ export function processData(rows) {
   });
   const stackedData = Object.values(stackedByYear).sort((a, b) => a.year - b.year);
 
+  // Location-over-time stacked data (top 5 locations)
+  const top5Locations = topLocations
+    .filter(l => l.name !== 'Unknown')
+    .slice(0, 5)
+    .map(l => l.name);
+  const locationStackedByYear = {};
+  processed.forEach(r => {
+    if (!r.year || r.locationNorm === 'Unknown') return;
+    if (!locationStackedByYear[r.year]) {
+      locationStackedByYear[r.year] = { year: r.year };
+      top5Locations.forEach(l => { locationStackedByYear[r.year][l] = 0; });
+      locationStackedByYear[r.year]['Others'] = 0;
+    }
+    if (top5Locations.includes(r.locationNorm)) {
+      locationStackedByYear[r.year][r.locationNorm]++;
+    } else {
+      locationStackedByYear[r.year]['Others']++;
+    }
+  });
+  const locationStackedData = Object.values(locationStackedByYear).sort((a, b) => a.year - b.year);
+
+  // Location spans: first/last year active, total letters
+  const locationSpanMap = {};
+  processed.forEach(r => {
+    if (!r.year || r.locationNorm === 'Unknown') return;
+    const loc = r.locationNorm;
+    if (!locationSpanMap[loc]) {
+      locationSpanMap[loc] = { minYear: r.year, maxYear: r.year, count: 0 };
+    }
+    locationSpanMap[loc].count++;
+    if (r.year < locationSpanMap[loc].minYear) locationSpanMap[loc].minYear = r.year;
+    if (r.year > locationSpanMap[loc].maxYear) locationSpanMap[loc].maxYear = r.year;
+  });
+  const locationSpans = Object.entries(locationSpanMap)
+    .map(([name, d]) => ({ name, ...d, span: d.maxYear - d.minYear }))
+    .sort((a, b) => b.count - a.count);
+
+  // All known locations (excluding Unknown) for the spotlight dropdown
+  const allLocations = Object.keys(locationCounts)
+    .filter(l => l !== 'Unknown')
+    .sort((a, b) => locationCounts[b] - locationCounts[a]);
+
   return {
     processed,
     lettersPerYear,
@@ -167,6 +209,10 @@ export function processData(rows) {
     stackedData,
     senderCounts,
     receiverCounts,
+    top5Locations,
+    locationStackedData,
+    locationSpans,
+    allLocations,
   };
 }
 

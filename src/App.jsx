@@ -8,6 +8,7 @@ import PeopleExplorer from './components/PeopleExplorer';
 import CorrespondenceProgression from './components/CorrespondenceProgression';
 import IndividualLookup from './components/IndividualLookup';
 import NetworkGraphs from './components/NetworkGraphs';
+import PlacesExplorer from './components/PlacesExplorer';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState(0);
@@ -69,6 +70,7 @@ export default function App() {
         {activeTab === 2 && <CorrespondenceProgression data={data} />}
         {activeTab === 3 && <IndividualLookup data={data} />}
         {activeTab === 4 && <NetworkGraphs data={data} />}
+        {activeTab === 5 && <PlacesExplorer data={data} />}
       </main>
     </div>
   );
