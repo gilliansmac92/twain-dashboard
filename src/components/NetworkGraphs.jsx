@@ -18,6 +18,16 @@ const GRAPH_PEOPLE = [
     label: "Olivia's Network",
     subtitle: "Force-directed correspondence network for Olivia L. Clemens",
   },
+  {
+    key: 'Isabel V. Lyon',
+    label: "Isabel's Network",
+    subtitle: "Force-directed correspondence network for Isabel V. Lyon",
+  },
+  {
+    key: 'Ralph W. Ashcroft',
+    label: "Ashcroft's Network",
+    subtitle: "Force-directed correspondence network for Ralph W. Ashcroft",
+  },
 ];
 
 function shortenName(name) {
