@@ -243,6 +243,7 @@ export function buildNetworkData(processed, centerPerson, maxNodes = 25) {
   const nodes = Array.from(nodeSet).map(name => ({
     id: name,
     isCenter: name === centerPerson,
+    isPlace: false,
     value: directConnections[name] || 0,
   }));
 
@@ -252,6 +253,122 @@ export function buildNetworkData(processed, centerPerson, maxNodes = 25) {
     if (nodeSet.has(a) && nodeSet.has(b)) {
       links.push({ source: a, target: b, value: count });
     }
+  });
+
+  return { nodes, links };
+}
+
+export function buildPlaceNetworkData(processed, maxNodes = 30) {
+  // Count total letters per location
+  const locationCounts = {};
+  processed.forEach(r => {
+    if (r.locationNorm && r.locationNorm !== 'Unknown') {
+      locationCounts[r.locationNorm] = (locationCounts[r.locationNorm] || 0) + 1;
+    }
+  });
+
+  // Keep top N locations as nodes
+  const topLocations = Object.entries(locationCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, maxNodes)
+    .map(([name]) => name);
+
+  const locationSet = new Set(topLocations);
+
+  // Build person -> [locations they wrote from] mapping
+  const personLocMap = {};
+  processed.forEach(r => {
+    if (!locationSet.has(r.locationNorm)) return;
+    if (!personLocMap[r.senderNorm]) personLocMap[r.senderNorm] = new Set();
+    personLocMap[r.senderNorm].add(r.locationNorm);
+  });
+
+  // Edge weight = number of distinct people who wrote from BOTH locations
+  const edgeMap = {};
+  Object.values(personLocMap).forEach(locSet => {
+    const locs = Array.from(locSet);
+    for (let i = 0; i < locs.length; i++) {
+      for (let j = i + 1; j < locs.length; j++) {
+        const a = locs[i] < locs[j] ? locs[i] : locs[j];
+        const b = locs[i] < locs[j] ? locs[j] : locs[i];
+        const key = `${a}|||${b}`;
+        edgeMap[key] = (edgeMap[key] || 0) + 1;
+      }
+    }
+  });
+
+  const nodes = topLocations.map(name => ({
+    id: name,
+    isPlace: true,
+    isCenter: false,
+    value: locationCounts[name] || 0,
+  }));
+
+  const links = Object.entries(edgeMap)
+    .filter(([, count]) => count >= 2)
+    .map(([key, value]) => {
+      const [source, target] = key.split('|||');
+      return { source, target, value };
+    });
+
+  return { nodes, links };
+}
+
+export function buildTwainNetworkWithPlaces(processed, centerPerson = 'Samuel L. Clemens', maxPeople = 20, maxPlaces = 15) {
+  // Build person-to-person edges
+  const personEdgeMap = {};
+  processed.forEach(r => {
+    const a = r.senderNorm;
+    const b = r.receiverNorm;
+    if (!a || !b || a === b) return;
+    const key = a < b ? `${a}|||${b}` : `${b}|||${a}`;
+    personEdgeMap[key] = (personEdgeMap[key] || 0) + 1;
+  });
+
+  const directConnections = {};
+  Object.entries(personEdgeMap).forEach(([key, count]) => {
+    const [a, b] = key.split('|||');
+    if (a === centerPerson) directConnections[b] = (directConnections[b] || 0) + count;
+    else if (b === centerPerson) directConnections[a] = (directConnections[a] || 0) + count;
+  });
+
+  const topPeople = Object.entries(directConnections)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, maxPeople)
+    .map(([name]) => name);
+
+  // Build center-person -> location edges
+  const centerLocCounts = {};
+  processed.forEach(r => {
+    if (r.senderNorm !== centerPerson) return;
+    if (!r.locationNorm || r.locationNorm === 'Unknown') return;
+    centerLocCounts[r.locationNorm] = (centerLocCounts[r.locationNorm] || 0) + 1;
+  });
+
+  const topPlaces = Object.entries(centerLocCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, maxPlaces)
+    .map(([name]) => name);
+
+  const personSet = new Set([centerPerson, ...topPeople]);
+
+  const nodes = [
+    { id: centerPerson, isCenter: true, isPlace: false, value: 0 },
+    ...topPeople.map(name => ({ id: name, isCenter: false, isPlace: false, value: directConnections[name] || 0 })),
+    ...topPlaces.map(name => ({ id: name, isCenter: false, isPlace: true, value: centerLocCounts[name] || 0 })),
+  ];
+
+  const links = [];
+  // Person-to-person links (only involving center and top contacts)
+  Object.entries(personEdgeMap).forEach(([key, count]) => {
+    const [a, b] = key.split('|||');
+    if (personSet.has(a) && personSet.has(b)) {
+      links.push({ source: a, target: b, value: count });
+    }
+  });
+  // Center-to-place links
+  topPlaces.forEach(place => {
+    links.push({ source: centerPerson, target: place, value: centerLocCounts[place] });
   });
 
   return { nodes, links };

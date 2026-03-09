@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   AreaChart, Area
 } from 'recharts';
-import { getPersonData } from '../utils/dataUtils';
+import { getPersonData, buildNetworkData } from '../utils/dataUtils';
+import ForceGraph from './ForceGraph';
 
 function SmallBarChart({ data, color = '#4a2200' }) {
   if (!data || data.length === 0) return <div className="text-[#888] text-sm py-4">No data</div>;
@@ -32,6 +33,10 @@ export default function PeopleExplorer({ data }) {
     : allPeople;
 
   const personData = selected ? getPersonData(processed, selected) : null;
+  const networkData = useMemo(
+    () => (selected ? buildNetworkData(processed, selected, 20) : null),
+    [processed, selected]
+  );
 
   return (
     <div className="space-y-6">
@@ -95,6 +100,30 @@ export default function PeopleExplorer({ data }) {
                   <Area type="monotone" dataKey="count" stroke="#4a2200" strokeWidth={2} fill="url(#personGrad)" />
                 </AreaChart>
               </ResponsiveContainer>
+            </div>
+          )}
+
+          {networkData && networkData.nodes.length > 1 && (
+            <div className="bg-white border border-[#e5e7eb] rounded-lg p-5 shadow-sm">
+              <h3 className="text-base font-semibold text-[#4a2200] mb-1">Correspondence Network</h3>
+              <p className="text-[#888] text-xs mb-3">
+                Force-directed graph of {selected}&apos;s top correspondents. Drag nodes to rearrange, scroll to zoom.
+                Node size ∝ letters exchanged.
+              </p>
+              <p className="text-[#aaa] text-xs mb-3">
+                {networkData.nodes.length} people &middot; {networkData.links.length} connections
+              </p>
+              <ForceGraph networkData={networkData} height={420} />
+              <div className="mt-3 flex flex-wrap gap-5 text-xs text-[#555]">
+                <span className="flex items-center gap-1.5">
+                  <span className="inline-block w-3 h-3 rounded-full bg-[#4a2200]" />
+                  {selected}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="inline-block w-3 h-3 rounded-full bg-[#a05820]" />
+                  Correspondent
+                </span>
+              </div>
             </div>
           )}
 

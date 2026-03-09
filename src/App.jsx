@@ -17,7 +17,7 @@ export default function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    Papa.parse('/experiments/twainletterscsv.txt', {
+    Papa.parse(`${import.meta.env.BASE_URL}twainletterscsv.txt`, {
       download: true,
       header: true,
       skipEmptyLines: true,
