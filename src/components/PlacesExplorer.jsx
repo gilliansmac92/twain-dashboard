@@ -3,6 +3,8 @@ import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
+import { buildPlaceNetworkData } from '../utils/dataUtils';
+import ForceGraph from './ForceGraph';
 
 const COLORS = ['#4a2200', '#7a4010', '#a05820', '#c07830', '#d09040', '#3a6040'];
 
@@ -252,6 +254,8 @@ export default function PlacesExplorer({ data }) {
     ? Math.round((totalWithLocation / processed.length) * 100)
     : 0;
 
+  const placeNetworkData = useMemo(() => buildPlaceNetworkData(processed, 30), [processed]);
+
   return (
     <div className="space-y-8">
       {/* Summary stats */}
@@ -289,6 +293,37 @@ export default function PlacesExplorer({ data }) {
             ))}
           </BarChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* Place-to-place network graph */}
+      <div className="bg-white border border-[#e5e7eb] rounded-lg p-5 shadow-sm">
+        <h2 className="text-lg font-semibold text-[#4a2200] mb-1">Location Connection Network</h2>
+        <p className="text-sm text-[#888] mb-4">
+          Nodes represent the top 30 writing locations. Two locations are connected when the same
+          correspondents wrote from both places — stronger edges indicate more shared writers.
+          Node size reflects the total number of letters sent from that location. Drag nodes to
+          rearrange, scroll to zoom.
+        </p>
+        <p className="text-[#aaa] text-xs mb-4">
+          {placeNetworkData.nodes.length} locations &middot; {placeNetworkData.links.length} connections
+        </p>
+        <ForceGraph
+          networkData={placeNetworkData}
+          height={500}
+          centerColor="#1e3a5f"
+          personColor="#1e3a5f"
+          placeColor="#1e3a5f"
+        />
+        <div className="mt-3 flex flex-wrap gap-5 text-xs text-[#555]">
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block w-3 h-3 rounded-full bg-[#1e3a5f]" />
+            Location (size ∝ letters sent)
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block w-8 h-px bg-[#c5a880] border-t-2 border-[#c5a880]" />
+            Edge weight ∝ shared correspondents
+          </span>
+        </div>
       </div>
 
       {/* Decade heatmap by location */}
