@@ -86,7 +86,7 @@ export function processData(rows) {
   });
   const topSenders = Object.entries(senderCounts)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 20)
+    .slice(0, 10)
     .map(([name, count]) => ({ name, count }));
 
   const receiverCounts = {};
@@ -95,7 +95,7 @@ export function processData(rows) {
   });
   const topReceivers = Object.entries(receiverCounts)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 20)
+    .slice(0, 10)
     .map(([name, count]) => ({ name, count }));
 
   const locationCounts = {};

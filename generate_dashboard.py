@@ -13,7 +13,7 @@ from pathlib import Path
 
 CSV_PATH = Path(__file__).parent / "twainletterscsv.txt"
 OUT_PATH = Path(__file__).parent / "dashboard.html"
-TOP_N = 20           # number of items shown in bar charts
+TOP_N = 10           # number of items shown in bar charts
 BAR_ROW_PX = 22      # pixels per bar row in horizontal bar charts
 BAR_CHART_PAD = 16   # extra vertical padding around bar chart content
 

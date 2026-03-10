@@ -65,11 +65,11 @@ export default function Overview({ data }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white border border-[#e5e7eb] rounded-lg p-5 shadow-sm">
-          <h2 className="text-lg font-semibold text-[#4a2200] mb-4">Top 20 Senders</h2>
+          <h2 className="text-lg font-semibold text-[#4a2200] mb-4">Top 10 Senders</h2>
           <HBarChart data={[...topSenders].reverse()} />
         </div>
         <div className="bg-white border border-[#e5e7eb] rounded-lg p-5 shadow-sm">
-          <h2 className="text-lg font-semibold text-[#4a2200] mb-4">Top 20 Receivers</h2>
+          <h2 className="text-lg font-semibold text-[#4a2200] mb-4">Top 10 Receivers</h2>
           <HBarChart data={[...topReceivers].reverse()} color="#7a4010" />
         </div>
       </div>
