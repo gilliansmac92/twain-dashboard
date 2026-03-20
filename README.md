@@ -1,6 +1,6 @@
 # Mark Twain's Outgoing Letters: An Interactive History
 
-An interactive React + Vite + Tailwind CSS dashboard for exploring ~12,722 outgoing letters drawn from the [Mark Twain Project Online](https://www.marktwainproject.org/)'s catalogue of letters (1853–1910).
+This repository is indebted to [Ian Millgan](https://github.com/ianmilligan1)'s faculty explorer dashboard, using the prompt and modifiying the experiment to suit the data for Mark Twain's letter produced the following project. An interactive React + Vite + Tailwind CSS dashboard for exploring ~12,722 outgoing letters drawn from the [Mark Twain Project Online](https://www.marktwainproject.org/)'s catalogue of letters (1853–1910).
 
 ## Live Dashboard
 
